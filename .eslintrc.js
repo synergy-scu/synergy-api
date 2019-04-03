@@ -28,6 +28,7 @@ module.exports = {
         ...require('./eslint/style'),
         ...require('./eslint/variables'),
         'babel/no-invalid-this': 'off',
+        'no-invalid-this': 'off',
         'no-console': 'off',
     },
 };
