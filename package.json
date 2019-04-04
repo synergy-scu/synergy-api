@@ -1,14 +1,14 @@
 {
     "name": "synergy-api",
     "version": "0.0.0",
-    "main": "bin/server.js",
+    "main": "bin/synergy.js",
     "description": "Energy Monitoring and Visualization System",
     "repository": "https://github.com/synergy-scu/synergy-api.git",
     "author": "Sarah Johnson & Pearce Ropion",
     "license": "MIT",
     "private": false,
     "scripts": {
-        "dev": "NODE_ENV=development nodemon --delay 0.5 --exec babel-node bin/server.js",
+        "dev": "NODE_ENV=development nodemon --delay 0.5 --exec babel-node bin/synergy.js",
         "lint": "eslint --config ./.eslintrc.js --fix app",
         "test": "NODE_ENV=test jest --config jest.config.js",
         "test:watch": "yarn test --watch",

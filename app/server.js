@@ -1,27 +1,8 @@
-import express from 'express';
-import bodyParser from 'body-parser';
+import http from 'http';
 
-import SynergyDB from './SynergyDB';
-
-import apiResolver from './routes/apiResolver';
-import loginResolver from './routes/loginResolver';
-import appResolver from './routes/appResolver';
+import app from './app';
 
 
-const app = express();
+const server = http.Server(app);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use('/', appResolver);
-app.use('/login', loginResolver);
-app.use('/api', apiResolver);
-
-
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
-app.locals.db = SynergyDB;
-
-export default app;
+export default server;
