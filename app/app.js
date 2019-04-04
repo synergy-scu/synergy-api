@@ -17,11 +17,6 @@ app.use('/', appResolver);
 app.use('/login', loginResolver);
 app.use('/api', apiResolver);
 
-
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
 app.locals.db = SynergyDB;
 
 export default app;
