@@ -9,6 +9,8 @@ router.post('/', asyncMiddleware((req, res, next) => {
     getUsageLegacy(req.app.locals.db, req.body)
         .then(result => {
             res.json(result);
+        }).catch(error => {
+            res.json(error);
         });
 }));
 

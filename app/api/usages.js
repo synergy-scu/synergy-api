@@ -1,6 +1,6 @@
 import { usageFormatter } from '../utils/formatters';
 
-export const getUsageLegacy = (db, payload) => {
+export const getUsage = (db, payload) => {
 
     const sql = usageFormatter({
         variables: payload.variables,

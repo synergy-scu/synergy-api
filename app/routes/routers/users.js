@@ -5,14 +5,12 @@ import { createUser, getUser, updateUser, deleteUser } from '../../api/users';
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/', asyncMiddleware((req, res, next) => {
-    res.send('User Router');
-}));
-
 router.post('/create', asyncMiddleware((req, res, next) => {
     createUser(req.app.locals.db, req.body)
         .then(() => {
             res.status(201).send();
+        }).catch(error => {
+            res.json(error);
         });
 }));
 
@@ -20,6 +18,8 @@ router.post('/get', asyncMiddleware((req, res, next) => {
     getUser(req.app.locals.db, req.body)
         .then(([result]) => {
             res.json(result);
+        }).catch(error => {
+            res.json(error);
         });
 }));
 
@@ -27,6 +27,8 @@ router.post('/update', asyncMiddleware((req, res, next) => {
     updateUser(req.app.locals.db, req.body)
         .then(() => {
             res.status(201).send();
+        }).catch(error => {
+            res.json(error);
         });
 }));
 
@@ -34,6 +36,8 @@ router.post('/delete', asyncMiddleware((req, res, next) => {
     deleteUser(req.app.locals.db, req.body)
         .then(() => {
             res.status(204).send();
+        }).catch(error => {
+            res.json(error);
         });
 }));
 

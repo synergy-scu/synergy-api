@@ -3,6 +3,7 @@ import express from 'express';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 
 import { isValidUser } from '../api/users';
+import ErrorTypes from '../utils/ErrorTypes';
 
 const router = express.Router();
 
@@ -17,9 +18,8 @@ router.post('/', asyncMiddleware((req, res, next) => {
         }).catch(error => {
             res.json({
                 error: {
-                    type: 'Invalid User',
-                    message: 'No user was found with this email address',
-                    extra: error,
+                    ...ErrorTypes.INVALID_USER,
+                    error,
                 },
             });
         });
