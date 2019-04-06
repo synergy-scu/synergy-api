@@ -2,6 +2,7 @@ import express from 'express';
 
 import asyncMiddleware from '../../middleware/asyncMiddleware';
 import { createUser, getUser, updateUser, deleteUser } from '../../api/users';
+import { validResponse } from '../../utils/response';
 
 const router = express.Router({ mergeParams: true });
 
@@ -17,7 +18,7 @@ router.post('/create', asyncMiddleware((req, res, next) => {
 router.post('/get', asyncMiddleware((req, res, next) => {
     getUser(req.app.locals.db, req.body)
         .then(([result]) => {
-            res.json(result);
+            res.json(validResponse(result));
         }).catch(error => {
             res.json(error);
         });
