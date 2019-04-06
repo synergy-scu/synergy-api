@@ -6,12 +6,20 @@ import { selectFormatter, insertFormatter, updateFormatter, deleteFormatter } fr
 export const getGroups = (db, payload) => {
     const sql = selectFormatter({
         table: 'groups',
-        variables: payload.variables,
         limit: payload.limit,
         order: payload.order,
     });
 
-    return db.query(sql);
+    const memberSql = selectFormatter({
+        table: 'groupings',
+        limit: payload.limit,
+        order: payload.order,
+    });
+
+    return [
+        db.query(sql),
+        db.query(memberSql),
+    ];
 };
 
 export const getGroup = (db, payload) => {
@@ -22,7 +30,15 @@ export const getGroup = (db, payload) => {
         variables: { groupID },
     });
 
-    return db.query(sql);
+    const memberSql = selectFormatter({
+        table: 'groupings',
+        variables: { groupID },
+    });
+
+    return [
+        db.query(sql),
+        db.query(memberSql),
+    ];
 };
 
 export const createGroup = (db, payload) => {

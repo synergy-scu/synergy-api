@@ -2,13 +2,19 @@ import express from 'express';
 
 import asyncMiddleware from '../../middleware/asyncMiddleware';
 import { createGroup, getGroup, getGroups, updateGroup, deleteGroup } from '../../api/groups';
+import { validResponse, errorResponse } from '../../utils/response';
 
 const router = express.Router({ mergeParams: true });
 
 router.post('/', asyncMiddleware((req, res, next) => {
-    getGroups(req.app.locals.db, req.body)
-        .then(result => {
-            res.json(result);
+    const results = getGroups(req.app.locals.db, req.body);
+
+    Promise.all(results)
+        .then(([groups, members]) => {
+            res.json(validResponse({
+                groups,
+                members,
+            }));
         }).catch(error => {
             res.json(error);
         });
@@ -26,11 +32,16 @@ router.post('/create', asyncMiddleware((req, res, next) => {
 }));
 
 router.post('/get', asyncMiddleware((req, res, next) => {
-    getGroup(req.app.locals.db, req.body)
-        .then(result => {
-            res.json(result);
+    const results = getGroup(req.app.locals.db, req.body);
+
+    Promise.all(results)
+        .then(([groups, members]) => {
+            res.json(validResponse({
+                groups,
+                members,
+            }));
         }).catch(error => {
-            res.json(error);
+            res.json(errorResponse(error));
         });
 }));
 
