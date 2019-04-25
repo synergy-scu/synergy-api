@@ -1,5 +1,6 @@
 export default {
-    host: '192.168.0.39',
+    host: 'synergy-scu.ddns.net',
+    // host: '192.168.0.31',
     database: 'synergy',
     user: 'synergy',
     password: 'wonderland',

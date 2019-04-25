@@ -4,8 +4,8 @@ import asyncMiddleware from '../../middleware/asyncMiddleware';
 import { getChannel, getChannels, updateChannel } from '../../api/channels';
 import { validResponse } from '../../utils/response';
 
-const router = express.Router({ mergeParams: true });
 
+const router = express.Router({ mergeParams: true });
 router.post('/', asyncMiddleware((req, res, next) => {
     getChannels(req.app.locals.db, req.body)
         .then(result => {

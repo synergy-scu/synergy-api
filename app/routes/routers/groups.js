@@ -16,7 +16,7 @@ router.post('/', asyncMiddleware((req, res, next) => {
                 members,
             }));
         }).catch(error => {
-            res.json(error);
+            res.json(errorResponse(error));
         });
 }));
 
@@ -27,7 +27,7 @@ router.post('/create', asyncMiddleware((req, res, next) => {
         .then(() => {
             res.status(201).send();
         }).catch(error => {
-            res.json(error);
+            res.json(errorResponse(error));
         });
 }));
 
@@ -52,7 +52,7 @@ router.post('/update', asyncMiddleware((req, res, next) => {
         .then(() => {
             res.status(201).send();
         }).catch(error => {
-            res.json(error);
+            res.json(errorResponse(error));
         });
 }));
 
@@ -63,7 +63,7 @@ router.post('/delete', asyncMiddleware((req, res, next) => {
         .then(() => {
             res.status(204).send();
         }).catch(error => {
-            res.json(error);
+            res.json(errorResponse(error));
         });
 }));
 

@@ -3,7 +3,7 @@ import { selectFormatter, insertFormatter, updateFormatter, deleteFormatter } fr
 export const isValidUser = (db, payload) => {
     const sql = selectFormatter({
         table: 'users',
-        columns: ['email', 'password'],
+        columns: ['id', 'email', 'password', 'name', 'phone', 'family_size', 'cost', 'created', 'updated'],
         variables: payload.variables,
     });
 
@@ -13,7 +13,7 @@ export const isValidUser = (db, payload) => {
 export const getUser = (db, payload) => {
     const sql = selectFormatter({
         table: 'users',
-        columns: ['id', 'name', 'email', 'family_size', 'created', 'updated'],
+        columns: ['id', 'name', 'email', 'phone', 'family_size', 'cost', 'created', 'updated'],
         variables: { email: payload.email },
     });
 

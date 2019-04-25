@@ -1,5 +1,6 @@
 import mysql from 'mysql';
 import { get } from 'lodash';
+import moment from 'moment';
 
 export const selectFormatter = ({ table, columns = [], variables = null, limit = null, order = null, useRaw = new Set() }) => {
 
@@ -79,34 +80,44 @@ export const deleteFormatter = ({ table, where }) => {
     return mysql.format(sql, deleter);
 };
 
-export const usageFormatter = ({ variables, include }) => {
+export const usageFormatter = ({ variables, channels }) => {
 
     let selectors = [];
     let isFirstSelector = true;
 
-    const channels = include.map(channel => {
+    const includedChannels = channels.map(channel => {
         isFirstSelector = false;
-        selectors = selectors.concat(['channelID', channel.channelID]);
-        return `?? = ?`;
+        selectors = selectors.concat(['channelID', channel]);
+        return '?? = ?';
     }).join(' OR ');
-    const formattedChannels = ` (${channels})`;
+    const formattedChannels = ` (${includedChannels})`;
 
-    let where = ` WHERE${include.length ? formattedChannels : ''}`;
+    let where = channels.length ? ` WHERE ${formattedChannels}` : '';
 
-    const isAfter = get(variables, 'after', -1);
-    const isBefore = get(variables, 'before', -1);
-
-
-    if (isAfter > 0) {
-        where = where.concat(`${!isFirstSelector ? ' AND' : ''} ?? >= ?`);
-        selectors = selectors.concat(['time', new Date(isAfter)]);
+    const isAfter = get(variables, 'after', moment.invalid());
+    if (isAfter.isValid()) {
+        where = where.concat(`${!isFirstSelector ? ' AND' : ' WHERE'} ?? >= ?`);
+        selectors = selectors.concat(['time', isAfter.toDate()]);
         isFirstSelector = false;
     }
 
-    if (isBefore > 0) {
-        where = where.concat(`${!isFirstSelector ? ' AND' : ''} ?? <= ?`);
-        selectors = selectors.concat(['time', new Date(isBefore)]);
+    const isBefore = get(variables, 'before', moment.invalid());
+    if (isBefore.isValid()) {
+        where = where.concat(`${!isFirstSelector ? ' AND' : ' WHERE'} ?? <= ?`);
+        selectors = selectors.concat(['time', isBefore.toDate()]);
         isFirstSelector = false;
+    }
+
+    const orderBy = get(variables, 'order.by', '');
+    const orderDirection = get(variables, 'order.direction', 'ASC');
+    if (orderBy.length) {
+        where = where.concat(` ORDER BY ?? ${orderDirection}`);
+        selectors = selectors.concat([orderBy]);
+    }
+
+    const limit = get(variables, 'limit', -1);
+    if (limit > 0) {
+        where = where.concat(` LIMIT ${limit}`);
     }
 
     const sql = `SELECT * FROM usages`.concat(where);

@@ -1,5 +1,6 @@
 import express from 'express';
 
+import loginRouter from './routers/login';
 import userRouter from './routers/users';
 
 import groupRouter from './routers/groups';
@@ -11,6 +12,7 @@ import chartRouter from './routers/charts';
 
 const router = express.Router();
 
+router.use('/login', loginRouter);
 router.use('/user', userRouter);
 
 router.use('/group', groupRouter);

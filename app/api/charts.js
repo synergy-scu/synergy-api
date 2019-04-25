@@ -6,12 +6,18 @@ import { selectFormatter, insertFormatter, updateFormatter, deleteFormatter } fr
 export const getCharts = (db, payload) => {
     const sql = selectFormatter({
         table: 'charts',
-        variables: payload.variables,
-        limit: payload.limit,
-        order: payload.order,
+        ...payload,
     });
 
-    return db.query(sql);
+    const memberSql = selectFormatter({
+        table: 'chartlings',
+        ...payload,
+    });
+
+    return [
+        db.query(sql),
+        db.query(memberSql),
+    ];
 };
 
 export const getChart = (db, payload) => {
@@ -22,7 +28,15 @@ export const getChart = (db, payload) => {
         variables: { chartID },
     });
 
-    return db.query(sql);
+    const memberSql = selectFormatter({
+        table: 'chartlings',
+        variables: { chartID },
+    });
+
+    return [
+        db.query(sql),
+        db.query(memberSql),
+    ];
 };
 
 export const createChart = (db, payload) => {
