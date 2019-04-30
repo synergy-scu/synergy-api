@@ -25,7 +25,9 @@ router.post('/create', asyncMiddleware((req, res, next) => {
 
     Promise.all(results.queries)
         .then(() => {
-            res.status(201).send();
+            res.status(201).send(validResponse({
+                id: results.id,
+            }));
         }).catch(error => {
             res.status(500).json(errorResponse(error));
         });
