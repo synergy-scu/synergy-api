@@ -40,18 +40,24 @@ export const getChart = (db, payload) => {
 };
 
 export const createChart = (db, payload) => {
+    console.log(payload);
     const now = new Date();
     const chartID = uuidv4();
     const sql = insertFormatter({
         table: 'charts',
         variables: {
             chartID,
-            ...payload.variables,
+            name: get(payload, 'variables.name', null),
+            chartType: get(payload, 'variables.chartType', null),
+            usageType: get(payload, 'variables.usageType', null),
             members: get(payload, 'variables.members.length', 0),
+            options: get(payload, 'variables.options', null),
+            all: get(payload, 'variables.all', 0),
             created: now,
             updated: now,
         },
     });
+    console.log(sql);
 
     const promises = get(payload, 'variables.members', []).map(member => {
         const memberSql = insertFormatter({
