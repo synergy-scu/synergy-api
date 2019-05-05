@@ -2,13 +2,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import http from 'http';
 import socketIO from 'socket.io';
+import 'json.date-extensions';
 
 import SynergyDB from './SynergyDB';
 
 import apiResolver from './routes/apiResolver';
 import appResolver from './routes/appResolver';
 
-
+JSON.useDateParser();
 const app = express();
 
 app.use(bodyParser.json());

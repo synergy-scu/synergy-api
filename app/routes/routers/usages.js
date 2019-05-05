@@ -3,10 +3,38 @@ import uuidv4 from 'uuid/v4';
 import { get } from 'lodash';
 
 import asyncMiddleware from '../../middleware/asyncMiddleware';
-import { getLatestUsage } from '../../api/usages';
+import { getLatestUsage, getUsage } from '../../api/usages';
 import { validResponse, errorResponse } from '../../utils/response';
 
 const router = express.Router({ mergeParams: true });
+
+router.post('/history', asyncMiddleware((req, res, next) => {
+    const chartID = get(req.body, 'chartID', null);
+
+    if (!chartID) {
+        res.json(errorResponse({
+            message: 'Invalid request. Must include a chart ID',
+        }));
+    }
+
+    const variables = get(req.body, 'variables', {});
+    const channels = get(req.body, 'channels', []);
+
+    const promises = getUsage(req.app.locals.db, { channels, variables });
+
+    Promise.all(promises).then(results => {
+        const usages = results.flat();
+        res.json(validResponse({
+            chartID,
+            results: usages,
+        }));
+    }).catch(error => {
+        res.status(500).json(errorResponse({
+            chartID,
+            error,
+        }));
+    });
+}));
 
 router.post('/stream', asyncMiddleware((req, res, next) => {
     const { io, sockets } = req.app.locals;
@@ -39,7 +67,6 @@ router.post('/stream', asyncMiddleware((req, res, next) => {
     stream.on('connection', socket => {
         console.log('Connnected!!!');
 
-        // sockets[chartID].loopID = setTimeout(() => {
         sockets[chartID].loopID = setInterval(() => {
             const promises = getLatestUsage(req.app.locals.db, { variables, channels });
 
@@ -63,7 +90,6 @@ router.post('/stream', asyncMiddleware((req, res, next) => {
         socket.on('disconnect', reason => {
             if (reason === 'client namespace disconnect' || reason === 'transport close') {
                 console.log('Client Disconnected');
-                // clearTimeout(sockets[chartID].loopID);
                 clearInterval(sockets[chartID].loopID);
 
                 stream.removeAllListeners();

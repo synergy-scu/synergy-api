@@ -40,7 +40,7 @@ export const getChart = (db, payload) => {
 };
 
 export const createChart = (db, payload) => {
-    console.log(payload);
+    // console.log(payload);
     const now = new Date();
     const chartID = uuidv4();
     const sql = insertFormatter({

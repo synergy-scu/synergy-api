@@ -94,17 +94,17 @@ export const usageFormatter = ({ variables, channels }) => {
 
     let where = channels.length ? ` WHERE ${formattedChannels}` : '';
 
-    const isAfter = get(variables, 'after', moment.invalid());
-    if (isAfter.isValid()) {
+    const startDate = moment(get(variables, 'startDate', moment.invalid()));
+    if (startDate.isValid()) {
         where = where.concat(`${!isFirstSelector ? ' AND' : ' WHERE'} ?? >= ?`);
-        selectors = selectors.concat(['time', isAfter.toDate()]);
+        selectors = selectors.concat(['time', startDate.toDate()]);
         isFirstSelector = false;
     }
 
-    const isBefore = get(variables, 'before', moment.invalid());
-    if (isBefore.isValid()) {
+    const endDate = moment(get(variables, 'endDate', moment.invalid()));
+    if (endDate.isValid()) {
         where = where.concat(`${!isFirstSelector ? ' AND' : ' WHERE'} ?? <= ?`);
-        selectors = selectors.concat(['time', isBefore.toDate()]);
+        selectors = selectors.concat(['time', endDate.toDate()]);
         isFirstSelector = false;
     }
 

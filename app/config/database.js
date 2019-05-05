@@ -6,4 +6,5 @@ export default {
     password: 'wonderland',
     port: 3306,
     supportBigNumbers: true,
+    timezone: 'America/Los_Angeles',
 };

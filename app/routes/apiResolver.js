@@ -6,6 +6,7 @@ import userRouter from './routers/users';
 import groupRouter from './routers/groups';
 import deviceRouter from './routers/devices';
 import channelRouter from './routers/channels';
+import reminderRouter from './routers/reminders';
 
 import usageRouter from './routers/usages';
 import chartRouter from './routers/charts';
@@ -18,6 +19,7 @@ router.use('/user', userRouter);
 router.use('/group', groupRouter);
 router.use('/device', deviceRouter);
 router.use('/channel', channelRouter);
+router.use('/reminder', reminderRouter);
 
 router.use('/usage', usageRouter);
 router.use('/chart', chartRouter);

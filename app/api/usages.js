@@ -1,14 +1,17 @@
 import { usageFormatter } from '../utils/formatters';
 
 export const getUsage = (db, payload) => {
+    const promises = payload.channels.map(channel => {
+        const sql = usageFormatter({
+            channels: [channel],
+            variables: payload.variables,
+        });
+        // console.log(sql);
 
-    const sql = usageFormatter({
-        variables: payload.variables,
-        include: payload.include,
+        return db.query(sql);
     });
-    // console.log(sql);
 
-    return db.query(sql);
+    return promises;
 };
 
 export const getLatestUsage = (db, payload) => {
