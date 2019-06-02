@@ -66,26 +66,37 @@ router.post('/stream', asyncMiddleware((req, res, next) => {
 
     stream.on('connection', socket => {
         console.log('Connnected!!!');
+        let isStreaming = true;
 
         sockets[chartID].loopID = setInterval(() => {
-            const promises = getLatestUsage(req.app.locals.db, { variables, channels });
+            if (isStreaming) {
+                const promises = getLatestUsage(req.app.locals.db, { variables, channels });
 
-            Promise.all(promises).then(results => {
-                const usages = results.flat();
-                socket.emit('usage', validResponse({
-                    chartID,
-                    streamID,
-                    results: usages,
-                }));
-                console.log(usages);
-            }).catch(error => {
-                socket.emit('usage-error', errorResponse({
-                    chartID,
-                    streamID,
-                    error,
-                }));
-            });
+                Promise.all(promises).then(results => {
+                    const usages = results.flat();
+                    socket.emit('usage', validResponse({
+                        chartID,
+                        streamID,
+                        results: usages,
+                    }));
+                    // console.log(usages);
+                }).catch(error => {
+                    socket.emit('usage-error', errorResponse({
+                        chartID,
+                        streamID,
+                        error,
+                    }));
+                });
+            }
         }, refreshRate);
+
+        socket.on('pause', () => {
+            isStreaming = false;
+        });
+
+        socket.on('play', () => {
+            isStreaming = true;
+        });
 
         socket.on('disconnect', reason => {
             if (reason === 'client namespace disconnect' || reason === 'transport close') {
