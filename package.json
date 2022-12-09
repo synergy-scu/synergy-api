@@ -18,7 +18,7 @@
         "axios": "^0.18.0",
         "body-parser": "^1.18.3",
         "config": "^3.0.1",
-        "express": "^4.16.4",
+        "express": "^4.17.3",
         "express-session": "^1.15.6",
         "helmet": "^3.16.0",
         "json.date-extensions": "^1.2.2",
